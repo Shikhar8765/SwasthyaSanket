@@ -1,0 +1,12 @@
+# .gitignore
+
+venv/
+_pycache_/
+*.pyc
+*.pkl
+*.joblib
+.DS_Store
+*.db
+*.sqlite3
+*.log
+.env
