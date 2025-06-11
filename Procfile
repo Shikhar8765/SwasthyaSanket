@@ -1,0 +1,1 @@
+web: streamlit run 4_webapp/app.py
