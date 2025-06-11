@@ -8,8 +8,13 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 
 # ── 1. LOAD MODELS ───────────────────────────────────────────
-ML_MODEL   = joblib.load("../3_model/disease_multilabel_predictor.joblib")
-LABELS     = joblib.load("../3_model/disease_labels.joblib")   # list[str]
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model_path  = os.path.join(BASE_DIR, "../3_model/disease_multilabel_predictor.joblib")
+labels_path = os.path.join(BASE_DIR, "../3_model/disease_labels.joblib")
+
+ML_MODEL = joblib.load(model_path)
+LABELS   = joblib.load(labels_path)
 
 # ── 2. PREDICT MULTIPLE DISEASES WITH CONFIDENCE ─────────────
 def predict_diseases_and_confidences(age, bmi, smoker, alcohol, fam_history):
