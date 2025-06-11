@@ -5,6 +5,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
 
 # ── Local helper modules ────────────────────────────────────
 from chatbot import get_bot_response
@@ -14,8 +15,11 @@ from utils_disease import (
     generate_work_chart                 # list[str]
 )
 
+# ── Helper to resolve base path ─────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # ── 1 ▸ Load community-level NCD proxy model ────────────────
-ncd_model = joblib.load("../3_model/best_ncd_model.joblib")
+ncd_model = joblib.load(os.path.join(BASE_DIR, "../3_model/best_ncd_model.joblib"))
 
 # ── 2 ▸ Page config ─────────────────────────────────────────
 st.set_page_config(page_title="NCD Risk Predictor", layout="wide")
@@ -48,7 +52,7 @@ if st.sidebar.button("🔍 Predict"):
 
     st.subheader("🧪 Community-Level NCD Risk")
     if ncd_flag:
-        st.error("⚠️ High NCD Risk Detected")
+        st.error("⚠ High NCD Risk Detected")
     else:
         st.success("✅ Low NCD Risk")
 
@@ -59,7 +63,7 @@ if st.sidebar.button("🔍 Predict"):
 
     for disease, prob in probs.items():
         if prob >= 0.15:                         # show only if ≥15 %
-            st.markdown(f"**{disease}** : `{prob:.2f}`")
+            st.markdown(f"{disease}** : {prob:.2f}")
             st.progress(prob)
 
     # 4-C: personalised diet chart (image) -------------------
@@ -78,13 +82,13 @@ st.markdown("---")
 st.subheader("🤖 Hindi Health Chatbot")
 user_q = st.text_input("कृपया अपना प्रश्न लिखें:", "मधुमेह क्या है?")
 if st.button("💬 उत्तर प्राप्त करें"):
-    st.markdown(f"**बॉट:** {get_bot_response(user_q)}")
+    st.markdown(f"*बॉट:* {get_bot_response(user_q)}")
 
 # ── 6 ▸ Optional evaluation plots ──────────────────────────
 with st.expander("📊 Show Model Evaluation Plots"):
-    st.image("../3_model/confusion_matrix.png", caption="Confusion Matrix",
-             use_container_width=True)
-    st.image("../3_model/roc_curve.png", caption="ROC Curve",
-             use_container_width=True)
-    st.image("../3_model/risk_score_violin.png", caption="Risk-Score Violin",
-             use_container_width=True)
+    st.image(os.path.join(BASE_DIR, "../3_model/confusion_matrix.png"),
+             caption="Confusion Matrix", use_container_width=True)
+    st.image(os.path.join(BASE_DIR, "../3_model/roc_curve.png"),
+             caption="ROC Curve", use_container_width=True)
+    st.image(os.path.join(BASE_DIR, "../3_model/risk_score_violin.png"),
+             caption="Risk-Score Violin", use_container_width=True)
